@@ -14,5 +14,5 @@ dependencyResolutionManagement {
 }
 rootProject.name = "cryptomarket"
 include ':app'
-include ':arch'
-include ':network'
+include ':core:arch'
+include ':core:network'
