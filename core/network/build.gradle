@@ -1,5 +1,5 @@
 plugins {
-    id 'com.android.application'
+    id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
     id 'dagger.hilt.android.plugin'
     id 'kotlin-kapt'
@@ -10,7 +10,6 @@ android {
     compileSdk 33
 
     defaultConfig {
-        applicationId "dev.ferrant.network"
         minSdk 23
         targetSdk 33
         versionCode 1
