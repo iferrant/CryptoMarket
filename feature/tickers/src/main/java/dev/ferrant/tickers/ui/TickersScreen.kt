@@ -47,6 +47,7 @@ fun TickersRoute(
     TickersScreen(
         modifier = modifier,
         state = state,
+        onSearch = viewModel::search
     )
 }
 
@@ -55,6 +56,7 @@ fun TickersRoute(
 fun TickersScreen(
     modifier: Modifier = Modifier,
     state: TickersViewState,
+    onSearch: (String) -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -76,7 +78,10 @@ fun TickersScreen(
         ) {
 
             var text by remember { mutableStateOf(TextFieldValue("")) }
-            TickersHeader(value = text) { text = it }
+            TickersHeader(value = text) {
+                text = it
+                onSearch(it.text)
+            }
 
             TickersContent(state = state)
         }

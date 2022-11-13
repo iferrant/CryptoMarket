@@ -10,41 +10,46 @@ import dev.ferrant.tickers.contract.TickerListItem
 import dev.ferrant.tickers.contract.TickersStateReducer
 import dev.ferrant.tickers.contract.TickersViewIntent
 import dev.ferrant.tickers.contract.TickersViewState
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-@OptIn(
-    ExperimentalCoroutinesApi::class,
-    FlowPreview::class,
-)
+@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class TickersViewModel @Inject constructor(
     private val repository: TickerRepository,
 ) : BaseViewModel<TickersViewIntent, TickersViewState>() {
 
     init {
+        viewModelScope.launch {
+            while (isActive) {
+                produceIntent(TickersViewIntent.OnRefresh(DEFAULT_SYMBOLS))
+                delay(5000)
+            }
+        }
         search()
     }
 
     override fun createInitialState(): TickersViewState = TickersViewState(isLoading = true)
 
     override fun Flow<TickersViewIntent>.handleIntent(): Flow<StateReducer<TickersViewState>> {
-        val initialFlow = filterIsInstance<TickersViewIntent.OnInit>()
-            .flatMapConcat {
+        val refreshFlow = filterIsInstance<TickersViewIntent.OnRefresh>()
+            .onEach { repository.refreshTickers(it.symbols) }
+            .map { TickersStateReducer.Refresh }
+
+        val searchFlow = filterIsInstance<TickersViewIntent.OnSearch>()
+            .flatMapLatest {
                 repository
-                    .getTickers(symbols = DEFAULT_SYMBOLS)
+                    .getTickers(query = it.query)
                     .map<List<Ticker>, TickersStateReducer> { tickers ->
                         TickersStateReducer.TickersList(tickers.map { TickerListItem.TickerItem(it) }
                     )}
@@ -52,19 +57,13 @@ class TickersViewModel @Inject constructor(
             .onStart { emit(TickersStateReducer.Skeletons) }
 
         return merge(
-            initialFlow,
+            refreshFlow,
+            searchFlow,
         )
     }
 
     fun search(query: String = "") {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                while (isActive) {
-                    produceIntent(TickersViewIntent.OnInit)
-                    delay(5000)
-                }
-            }
-        }
+        produceIntent(TickersViewIntent.OnSearch(query))
     }
 
     companion object {

@@ -27,4 +27,8 @@ sealed class TickersStateReducer: StateReducer<TickersViewState> {
             )
     }
 
+    object Refresh: TickersStateReducer() {
+        override fun reduce(initialState: TickersViewState): TickersViewState = initialState
+    }
+
 }
