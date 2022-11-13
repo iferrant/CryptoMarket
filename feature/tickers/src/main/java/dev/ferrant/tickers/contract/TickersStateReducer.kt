@@ -7,7 +7,6 @@ sealed class TickersStateReducer: StateReducer<TickersViewState> {
     object Skeletons: TickersStateReducer() {
         override fun reduce(initialState: TickersViewState): TickersViewState =
             initialState.copy(
-                isLoading = true,
                 tickers = arrayListOf<TickerListItem.Skeleton>().apply {
                     for (i in 1..20) add(TickerListItem.Skeleton)
                 }

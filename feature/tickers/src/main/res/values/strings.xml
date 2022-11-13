@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">tickers</string>
+    <string name="tickers_list_empty_state">No results found</string>
 </resources>
