@@ -4,5 +4,6 @@ import dev.ferrant.model.Ticker
 import kotlinx.coroutines.flow.Flow
 
 interface TickerRepository {
-    fun getTickers(symbols: String): Flow<List<Ticker>>
+    suspend fun refreshTickers(symbols: String)
+    fun getTickers(query: String): Flow<List<Ticker>>
 }

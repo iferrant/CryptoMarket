@@ -1,10 +1,10 @@
 package dev.ferrant.data.model
 
-import dev.ferrant.model.Ticker
+import dev.ferrant.database.model.TickerEntity
 import dev.ferrant.network.model.NetworkTicker
 import java.util.*
 
-fun NetworkTicker.asExternalModel() = Ticker(
+fun NetworkTicker.asEntity() = TickerEntity(
     symbol = symbol,
     bid = bid,
     bidSize = bidSize,
