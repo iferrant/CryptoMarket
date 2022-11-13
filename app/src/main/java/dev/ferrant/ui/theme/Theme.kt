@@ -15,33 +15,60 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
-)
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
+    primary = LightGreen,
+    onPrimary = Light_White,
+    primaryContainer = LightGreenLight,
+    onPrimaryContainer = LightGreenDark,
+    secondary = LightGray,
+    onSecondary = Light_White,
+    secondaryContainer = LightGrayLight,
+    onSecondaryContainer = LightGrayDark,
+    tertiary = LightPurple,
+    onTertiary = Light_White,
+    tertiaryContainer = LightPurpleLight,
+    onTertiaryContainer = LightPurpleDark,
+    error = LightRed,
+    errorContainer = LightRedLight,
+    onError = Light_White,
+    onErrorContainer = LightRedDark,
+    background = LightGrayLighter,
+    onBackground = LightGrayDarkest,
+    surface = LightGrayLighter,
+    onSurface = LightGrayDarkest,
+    surfaceTint = LightGreen,
+)
 
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+private val DarkColorScheme = darkColorScheme(
+    primary = DarkGreenLight,
+    onPrimary = DarkGreenDark,
+    primaryContainer = DarkGreen,
+    onPrimaryContainer = DarkGreenLighter,
+    secondary = DarkGray,
+    onSecondary = DarkGrayDark,
+    secondaryContainer = DarkGrayDarker,
+    onSecondaryContainer = DarkGrayLight,
+    tertiary = DarkPurpleLight,
+    onTertiary = DarkPurpleDark,
+    tertiaryContainer = DarkPurple,
+    onTertiaryContainer = DarkPurpleLighter,
+    error = DarkRedLight,
+    errorContainer = DarkRed,
+    onError = DarkRedDarker,
+    onErrorContainer = DarkRedLighter,
+    background = DarkGrayDarkest,
+    onBackground = DarkGrayLighter,
+    surface = DarkGrayDarkest,
+    onSurface = DarkGrayLighter,
+    surfaceTint = DarkGreenLight,
 )
 
 @Composable
 fun CryptoMarketTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {
