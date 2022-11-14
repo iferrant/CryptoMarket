@@ -13,6 +13,7 @@ import dev.ferrant.tickers.contract.TickersViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
@@ -44,7 +45,9 @@ class TickersViewModel @Inject constructor(
     override fun Flow<TickersViewIntent>.handleIntent(): Flow<StateReducer<TickersViewState>> {
         val refreshFlow = filterIsInstance<TickersViewIntent.OnRefresh>()
             .onEach { repository.refreshTickers(it.symbols) }
-            .map { TickersStateReducer.Refresh }
+            .map<TickersViewIntent, TickersStateReducer> { TickersStateReducer.Refresh }
+            .catch { emit(TickersStateReducer.Error(it.message)) }
+            .onStart { emit(TickersStateReducer.Skeletons) }
 
         val searchFlow = filterIsInstance<TickersViewIntent.OnSearch>()
             .flatMapLatest {
@@ -54,7 +57,6 @@ class TickersViewModel @Inject constructor(
                         TickersStateReducer.TickersList(tickers.map { TickerListItem.TickerItem(it) }
                     )}
             }
-            .onStart { emit(TickersStateReducer.Skeletons) }
 
         return merge(
             refreshFlow,

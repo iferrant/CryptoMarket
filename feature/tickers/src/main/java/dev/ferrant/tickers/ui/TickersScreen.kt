@@ -3,6 +3,7 @@ package dev.ferrant.tickers.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -34,6 +35,9 @@ import dev.ferrant.tickers.R
 import dev.ferrant.tickers.TickersViewModel
 import dev.ferrant.tickers.contract.TickerListItem
 import dev.ferrant.tickers.contract.TickersViewState
+import dev.ferrant.tickers.extensions.toDateFormat
+import dev.ferrant.tickers.extensions.toTimeFormat
+import java.util.*
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
@@ -59,6 +63,7 @@ fun TickersScreen(
     onSearch: (String) -> Unit,
 ) {
     Scaffold(
+        modifier = modifier,
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -119,8 +124,14 @@ fun TickersContent(
     modifier: Modifier = Modifier,
     state: TickersViewState,
 ) {
+
+    if (state.isContentOutdated && state.tickers.isNotEmpty()) {
+        TickersWarningMessage(items = state.tickers)
+    }
+
     if (state.tickers.isNotEmpty()) {
         LazyColumn(
+            modifier = modifier.padding(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
 
@@ -131,7 +142,7 @@ fun TickersContent(
                 }
             }
         }
-    } else {
+    } else if(state.isLoading.not()) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -141,6 +152,26 @@ fun TickersContent(
                 text = stringResource(id = R.string.tickers_list_empty_state),
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f),
                 style = MaterialTheme.typography.displaySmall,
+            )
+        }
+    }
+}
+
+@Composable
+fun TickersWarningMessage(items: List<TickerListItem>) {
+    val item = items[0]
+    if (item is TickerListItem.TickerItem) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Last update: ${item.ticker.date.toDateFormat()} at ${item.ticker.date.toTimeFormat()}",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f),
             )
         }
     }
@@ -158,4 +189,11 @@ fun PreviewTickersHeader() {
 fun PreviewTickersContent() {
     val items = previewTickers.map { TickerListItem.TickerItem(it) }
     TickersContent(state = TickersViewState(tickers = items))
+}
+
+@Preview
+@Composable
+fun PreviewTickersWarningMessage() {
+    val items = previewTickers.map { TickerListItem.TickerItem(it) }
+    TickersWarningMessage(items = items)
 }
