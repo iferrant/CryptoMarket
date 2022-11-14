@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +32,7 @@ fun TickerCard(
     val dailyChangeRelative = item.ticker.dailyChangeRelative*100
     val isChangePositive = dailyChangeRelative >= 0
 
-    ElevatedCard(
+    Card(
         modifier = modifier,
     ) {
         Row(
@@ -57,7 +57,7 @@ fun TickerCard(
                 Text(
                     text = "$dailyChangeRelative%",
                     style = MaterialTheme.typography.titleSmall,
-                    color = if(isChangePositive) Color.Green else Color.Red
+                    color = if(isChangePositive) Color(0xFF00C900) else Color.Red
                 )
             }
         }
@@ -68,46 +68,50 @@ fun TickerCard(
 fun TickerSkeleton(
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(72.dp)
-            .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+    Card(
+        modifier = modifier,
     ) {
-
-        Spacer(
+        Row(
             modifier = Modifier
-                .size(width = 96.dp, height = 24.dp)
-                .background(
-                    brush = loadingShimmerEffect(color = MaterialTheme.colorScheme.onBackground),
-                    shape = RoundedCornerShape(4.dp),
-                )
-        )
-
-        Column(
-            horizontalAlignment = Alignment.End,
-            verticalArrangement = Arrangement.spacedBy(4.dp),
+                .fillMaxWidth()
+                .height(80.dp)
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
         ) {
 
             Spacer(
                 modifier = Modifier
                     .size(width = 96.dp, height = 24.dp)
                     .background(
-                        brush = loadingShimmerEffect(color = MaterialTheme.colorScheme.onBackground),
+                        brush = loadingShimmerEffect(),
                         shape = RoundedCornerShape(4.dp),
                     )
             )
 
-            Spacer(
-                modifier = Modifier
-                    .size(width = 56.dp, height = 20.dp)
-                    .background(
-                        brush = loadingShimmerEffect(color = MaterialTheme.colorScheme.onBackground),
-                        shape = RoundedCornerShape(4.dp),
-                    )
-            )
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(4.dp),
+            ) {
 
+                Spacer(
+                    modifier = Modifier
+                        .size(width = 96.dp, height = 24.dp)
+                        .background(
+                            brush = loadingShimmerEffect(),
+                            shape = RoundedCornerShape(4.dp),
+                        )
+                )
+
+                Spacer(
+                    modifier = Modifier
+                        .size(width = 56.dp, height = 20.dp)
+                        .background(
+                            brush = loadingShimmerEffect(),
+                            shape = RoundedCornerShape(4.dp),
+                        )
+                )
+
+            }
         }
     }
 }
