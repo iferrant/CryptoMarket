@@ -16,5 +16,5 @@ fun NetworkTicker.asEntity() = TickerEntity(
     volume = volume,
     high = high,
     low = low,
-    date = Date()
+    date = Calendar.getInstance().timeInMillis,
 )

@@ -14,7 +14,7 @@ data class Ticker(
     val volume: Float,
     val high: Float,
     val low: Float,
-    val date: Date,
+    val date: Long,
 )
 
 val previewTicker = Ticker(
@@ -29,7 +29,7 @@ val previewTicker = Ticker(
     volume = 25373.17831895f,
     high = 17956f,
     low = 15588f,
-    date = Date()
+    date = Calendar.getInstance().timeInMillis,
 )
 
 val previewTickers = listOf(
@@ -45,7 +45,7 @@ val previewTickers = listOf(
         volume = 25373.17831895f,
         high = 17956f,
         low = 15588f,
-        date = Date(),
+        date = Calendar.getInstance().timeInMillis,
     ),
     Ticker(
         symbol = "tBTCUSD",
@@ -59,7 +59,7 @@ val previewTickers = listOf(
         volume = 25373.17831895f,
         high = 17956f,
         low = 15588f,
-        date = Date(),
+        date = Calendar.getInstance().timeInMillis,
     ),
     Ticker(
         symbol = "tBTCUSD",
@@ -73,7 +73,7 @@ val previewTickers = listOf(
         volume = 25373.17831895f,
         high = 17956f,
         low = 15588f,
-        date = Date(),
+        date = Calendar.getInstance().timeInMillis,
     ),
     Ticker(
         symbol = "tBTCUSD",
@@ -87,6 +87,6 @@ val previewTickers = listOf(
         volume = 25373.17831895f,
         high = 17956f,
         low = 15588f,
-        date = Date(),
+        date = Calendar.getInstance().timeInMillis,
     ),
 )

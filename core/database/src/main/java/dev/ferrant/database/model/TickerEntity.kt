@@ -27,7 +27,7 @@ data class TickerEntity(
     val volume: Float,
     val high: Float,
     val low: Float,
-    val date: Date,
+    val date: Long,
 )
 
 fun TickerEntity.asExternalModel() = Ticker(
