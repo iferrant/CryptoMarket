@@ -55,7 +55,7 @@ fun TickerCard(
                     style = MaterialTheme.typography.titleMedium,
                 )
                 Text(
-                    text = "$dailyChangeRelative%",
+                    text = String.format("%.2f", dailyChangeRelative).plus("%"),
                     style = MaterialTheme.typography.titleSmall,
                     color = if(isChangePositive) Color(0xFF00C900) else Color.Red
                 )
