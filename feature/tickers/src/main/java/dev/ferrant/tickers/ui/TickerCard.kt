@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.ferrant.model.formatSymbol
 import dev.ferrant.model.previewTicker
 import dev.ferrant.tickers.contract.TickerListItem
 import dev.ferrant.ui.loadingShimmerEffect
@@ -41,10 +42,22 @@ fun TickerCard(
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
-            Text(
-                text = item.ticker.symbol,
-                style = MaterialTheme.typography.titleMedium,
-            )
+            Row(
+                verticalAlignment = Alignment.Bottom,
+            ) {
+                Text(
+                    text = item.ticker.formatSymbol().first,
+                    style = MaterialTheme.typography.titleMedium,
+                    modifier = Modifier.alignByBaseline(),
+                )
+                Spacer(modifier = Modifier.size(2.dp))
+                Text(
+                    text = "/".plus(item.ticker.formatSymbol().second),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.5f),
+                    modifier = Modifier.alignByBaseline(),
+                )
+            }
 
             Column(
                 horizontalAlignment = Alignment.End,

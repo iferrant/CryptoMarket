@@ -17,6 +17,16 @@ data class Ticker(
     val date: Long,
 )
 
+fun Ticker.formatSymbol(): Pair<String, String> =
+    with(this.symbol) {
+        return if (this.contains(":")) {
+            val separator = this.indexOf(":")
+            Pair(this.subSequence(1, separator).toString(), this.subSequence(separator + 1, this.length).toString())
+        } else {
+            Pair(this.subSequence(1, 4).toString(), this.subSequence(4, this.length).toString())
+        }
+    }
+
 val previewTicker = Ticker(
     symbol = "tBTCUSD",
     bid = 17783f,
