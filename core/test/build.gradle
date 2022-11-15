@@ -32,6 +32,11 @@ android {
                 '-Xopt-in=kotlin.RequiresOptIn',
         ]
     }
+    packagingOptions {
+        resources {
+            excludes += "META-INF/*"
+        }
+    }
 }
 
 dependencies {
@@ -54,4 +59,6 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4"
     api "androidx.test.espresso:espresso-core:3.5.0"
     api "io.mockk:mockk-android:1.13.2"
+    api "androidx.compose.ui:ui-test-junit4:$compose_version"
+    api "androidx.compose.ui:ui-test-manifest:$compose_version"
 }
