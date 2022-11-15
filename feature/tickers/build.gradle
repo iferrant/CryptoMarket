@@ -43,6 +43,7 @@ dependencies {
     implementation project(":core:arch")
     implementation project(":core:data")
     implementation project(":core:model")
+    implementation project(":core:test")
     implementation project(":core:ui")
 
     // Compose
