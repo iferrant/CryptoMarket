@@ -1,5 +1,8 @@
 package dev.ferrant.tickers.ui
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -125,7 +128,9 @@ fun TickersContent(
     state: TickersViewState,
 ) {
 
-    if (state.isContentOutdated && state.tickers.isNotEmpty()) {
+    var warningVisible by remember { mutableStateOf(false) }
+    warningVisible = state.isContentOutdated && state.tickers.isNotEmpty()
+    AnimatedContent(isVisible = warningVisible) {
         TickersWarningMessage(items = state.tickers)
     }
 
@@ -174,6 +179,20 @@ fun TickersWarningMessage(items: List<TickerListItem>) {
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f),
             )
         }
+    }
+}
+
+@Composable
+fun AnimatedContent(
+    isVisible: Boolean = false,
+    content: @Composable () -> Unit
+) {
+    AnimatedVisibility(
+        visible = isVisible,
+        enter = expandVertically(expandFrom = Alignment.Top),
+        exit = shrinkVertically(shrinkTowards = Alignment.Top),
+    ) {
+        content()
     }
 }
 
