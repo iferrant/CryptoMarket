@@ -37,14 +37,19 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    packagingOptions {
+        resources {
+            excludes += "META-INF/*"
+        }
+    }
 }
 
 dependencies {
     implementation project(":core:arch")
     implementation project(":core:data")
     implementation project(":core:model")
-    implementation project(":core:test")
     implementation project(":core:ui")
+    testImplementation project(":core:test")
 
     // Compose
     implementation platform('androidx.compose:compose-bom:2022.11.00')
