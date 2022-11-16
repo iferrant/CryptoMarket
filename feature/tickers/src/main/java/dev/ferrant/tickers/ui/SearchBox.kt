@@ -8,13 +8,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import dev.ferrant.tickers.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,7 +33,18 @@ fun SearchBox(
                 color = MaterialTheme.colorScheme.onPrimary,
                 shape = RoundedCornerShape(32.dp),
             ),
-        trailingIcon = { Icon(imageVector = Icons.Rounded.Search, contentDescription = "Search") },
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Rounded.Search,
+                contentDescription = stringResource(id = R.string.search_box_content_description)
+            )
+        },
+        placeholder = {
+            Text(
+                text = stringResource(id = R.string.search_box_placeholder),
+                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.3f)
+            )
+        },
         colors = TextFieldDefaults.textFieldColors(
             focusedIndicatorColor = Color.Transparent,
             unfocusedIndicatorColor = Color.Transparent,
