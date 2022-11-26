@@ -13,9 +13,9 @@ abstract class BaseViewModel<VI : ViewIntent, VS : ViewState> : ViewModel() {
 
     private val viewIntentFlow = MutableSharedFlow<VI>()
 
-    private val _viewStateFlow = MutableStateFlow(initialState)
+    private val viewStateFlow = MutableStateFlow(initialState)
     val state: StateFlow<VS>
-        get() = _viewStateFlow
+        get() = viewStateFlow
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5000),
@@ -37,7 +37,7 @@ abstract class BaseViewModel<VI : ViewIntent, VS : ViewState> : ViewModel() {
     }
 
     private fun setState(state: VS) {
-        _viewStateFlow.value = state
+        viewStateFlow.value = state
     }
 
 }
