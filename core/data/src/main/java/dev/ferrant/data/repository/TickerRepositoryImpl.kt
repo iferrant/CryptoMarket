@@ -31,4 +31,9 @@ class TickerRepositoryImpl @Inject constructor(
     override fun getTickers(query: String): Flow<List<Ticker>> =
         tickerDao.getTickers("%${query}%").map { it.map(TickerEntity::asExternalModel) }
 
+    companion object {
+        private const val USD_SYMBOLS = "tBTCUSD,tETHUSD,tCHSB:USD,tLTCUSD,tXRPUSD,tDSHUSD," +
+                "tRRTUSD,tEOSUSD,tSANUSD,tDATUSD,tSNTUSD,tDOGE:USD,tLUNA:USD,tMATIC:USD," +
+                "tNEXO:USD,tOCEAN:USD,tBEST:USD,tAAVE:USD,tPLUUSD,tFILUSD"
+    }
 }

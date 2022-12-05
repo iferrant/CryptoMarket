@@ -1,6 +1,5 @@
 package dev.ferrant.tickers
 
-import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.ferrant.core.arch.BaseViewModel
 import dev.ferrant.core.arch.StateReducer
@@ -11,17 +10,13 @@ import dev.ferrant.tickers.contract.TickersStateReducer
 import dev.ferrant.tickers.contract.TickersViewIntent
 import dev.ferrant.tickers.contract.TickersViewState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.filterIsInstance
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.onStart
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -31,24 +26,12 @@ class TickersViewModel @Inject constructor(
 ) : BaseViewModel<TickersViewIntent, TickersViewState>() {
 
     init {
-        viewModelScope.launch {
-            while (isActive) {
-                produceIntent(TickersViewIntent.OnRefresh(DEFAULT_SYMBOLS))
-                delay(5000)
-            }
-        }
         search()
     }
 
     override fun createInitialState(): TickersViewState = TickersViewState(isLoading = true)
 
     override fun Flow<TickersViewIntent>.handleIntent(): Flow<StateReducer<TickersViewState>> {
-        val refreshFlow = filterIsInstance<TickersViewIntent.OnRefresh>()
-            .onEach { repository.refreshTickers(it.symbols) }
-            .map<TickersViewIntent, TickersStateReducer> { TickersStateReducer.Refresh }
-            .catch { emit(TickersStateReducer.Error(it.message)) }
-            .onStart { emit(TickersStateReducer.Skeletons) }
-
         val searchFlow = filterIsInstance<TickersViewIntent.OnSearch>()
             .flatMapLatest {
                 repository
@@ -59,7 +42,6 @@ class TickersViewModel @Inject constructor(
             }
 
         return merge(
-            refreshFlow,
             searchFlow,
         )
     }
