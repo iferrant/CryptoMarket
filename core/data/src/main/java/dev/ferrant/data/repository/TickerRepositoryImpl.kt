@@ -1,5 +1,6 @@
 package dev.ferrant.data.repository
 
+import dev.ferrant.data.DataResult
 import dev.ferrant.data.model.asEntity
 import dev.ferrant.database.dao.TickerDao
 import dev.ferrant.database.model.TickerEntity
@@ -12,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
+import java.net.UnknownHostException
 import javax.inject.Inject
 
 class TickerRepositoryImpl @Inject constructor(
@@ -20,11 +22,15 @@ class TickerRepositoryImpl @Inject constructor(
     private val tickerDao: TickerDao,
 ) : TickerRepository {
 
-
-    override suspend fun refreshTickers(symbols: String) {
-        withContext(ioDispatcher) {
-            val tickersEntities = network.tickers(symbols).map(NetworkTicker::asEntity)
+    override suspend fun refreshTickers(): DataResult<List<Ticker>> = withContext(ioDispatcher) {
+        try {
+            val tickersEntities = network.tickers(USD_SYMBOLS).map(NetworkTicker::asEntity)
             tickerDao.insertTickers(tickersEntities)
+            DataResult.Success(tickersEntities.map { it.asExternalModel() })
+        } catch (unknownHostException: UnknownHostException){
+            DataResult.Failure(unknownHostException.message, unknownHostException)
+        } catch (e: Exception) {
+            DataResult.Failure(e.message, e)
         }
     }
 

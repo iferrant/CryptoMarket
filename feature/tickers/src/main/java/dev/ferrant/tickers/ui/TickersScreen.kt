@@ -20,6 +20,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -40,16 +41,26 @@ import dev.ferrant.tickers.contract.TickerListItem
 import dev.ferrant.tickers.contract.TickersViewState
 import dev.ferrant.tickers.extensions.toDateFormat
 import dev.ferrant.tickers.extensions.toTimeFormat
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
 import java.util.*
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun TickersRoute(
     modifier: Modifier = Modifier,
-    viewModel: TickersViewModel = hiltViewModel()
+    viewModel: TickersViewModel = hiltViewModel(),
+    inputEventFlow: SharedFlow<String?>, // TODO: Define better event type
 ) {
 
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        inputEventFlow
+            .onEach(viewModel::error)
+            .collect()
+    }
 
     TickersScreen(
         modifier = modifier,

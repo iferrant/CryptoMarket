@@ -40,9 +40,15 @@ class TickersViewModel @Inject constructor(
                         TickersStateReducer.TickersList(tickers.map { TickerListItem.TickerItem(it) }
                     )}
             }
+            .catch { emit(TickersStateReducer.Error(it.message)) }
+            .onStart { emit(TickersStateReducer.Skeletons) }
+
+        val errorFlow = filterIsInstance<TickersViewIntent.OnError>()
+            .map { TickersStateReducer.Error(it.message) }
 
         return merge(
             searchFlow,
+            errorFlow,
         )
     }
 
@@ -50,9 +56,7 @@ class TickersViewModel @Inject constructor(
         produceIntent(TickersViewIntent.OnSearch(query))
     }
 
-    companion object {
-        const val DEFAULT_SYMBOLS = "tBTCUSD,tETHUSD,tCHSB:USD,tLTCUSD,tXRPUSD,tDSHUSD," +
-                "tRRTUSD,tEOSUSD,tSANUSD,tDATUSD,tSNTUSD,tDOGE:USD,tLUNA:USD,tMATIC:USD," +
-                "tNEXO:USD,tOCEAN:USD,tBEST:USD,tAAVE:USD,tPLUUSD,tFILUSD"
+    fun error(message: String?) {
+        produceIntent(TickersViewIntent.OnError(message))
     }
 }

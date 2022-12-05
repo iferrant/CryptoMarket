@@ -20,16 +20,22 @@ sealed class TickersStateReducer: StateReducer<TickersViewState> {
         override fun reduce(initialState: TickersViewState): TickersViewState =
             initialState.copy(
                 isLoading = false,
+                isContentOutdated = isContentOutdated(tickers),
                 tickers = tickers,
                 errorMessage = errorMessage,
             )
-    }
 
-    object Refresh: TickersStateReducer() {
-        override fun reduce(initialState: TickersViewState): TickersViewState =
-            initialState.copy(
-                isContentOutdated = isContentOutdated(initialState.tickers),
-            )
+        private fun isContentOutdated(tickers: List<TickerListItem>): Boolean {
+            if (tickers.isNotEmpty()) {
+                val item = tickers[0]
+                if (item is TickerListItem.TickerItem) {
+                    val duration = System.currentTimeMillis() - item.ticker.date
+                    return duration > 6000
+                }
+            }
+            return false
+        }
+
     }
 
     data class Error(
@@ -43,15 +49,4 @@ sealed class TickersStateReducer: StateReducer<TickersViewState> {
             )
     }
 
-}
-
-private fun isContentOutdated(tickers: List<TickerListItem>): Boolean {
-    if (tickers.isNotEmpty()) {
-        val item = tickers[0]
-        if (item is TickerListItem.TickerItem) {
-            val duration = System.currentTimeMillis() - item.ticker.date
-            return duration > 6000
-        }
-    }
-    return false
 }

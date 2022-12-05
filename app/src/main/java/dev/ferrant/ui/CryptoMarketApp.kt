@@ -10,11 +10,13 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import dev.ferrant.tickers.ui.TickersRoute
+import kotlinx.coroutines.flow.SharedFlow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CryptoMarketApp(
-    appState: CryptoMarketAppState = rememberCryptoMarketAppState()
+    appState: CryptoMarketAppState = rememberCryptoMarketAppState(),
+    inputEventFlow: SharedFlow<String?>, // TODO: Define better event type
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background,
@@ -28,7 +30,7 @@ fun CryptoMarketApp(
             modifier = Modifier.padding(padding),
         ) {
             composable(Screen.Search.route) {
-                TickersRoute()
+                TickersRoute(inputEventFlow = inputEventFlow)
             }
         }
     }
